@@ -63,6 +63,7 @@ request.interceptors.response.use((response, options) => {
 request.use(async (ctx, next) => {
   const { req } = ctx;
   const { url, options } = req;
+  ctx.req.url = `${process.env.apiUrl}${url}`;
   ctx.req.options = {
     ...options,
     foo: 'foo',
