@@ -1,0 +1,13 @@
+version: "3"
+networks:
+  default:
+    external:
+      name: default-network
+services:
+  healthyadmin:
+    container_name: healthyadmin
+    image: yp/healthyadmin
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - 8010:80
