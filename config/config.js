@@ -76,6 +76,7 @@ export default {
     // defaultGitUrl: 'https://gitee.com/ant-design/pro-blocks',
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
+  base:'/admin',
   hash: true,
   targets: {
     ie: 11,
