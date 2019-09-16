@@ -77,6 +77,7 @@ export default {
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
   base:'/admin',
+  publicPath:'/admin/',
   hash: true,
   targets: {
     ie: 11,
@@ -181,7 +182,7 @@ export default {
     },
   },
   manifest: {
-    basePath: '/',
+    basePath: '/admin',
   },
   chainWebpack: webpackPlugin,
 
