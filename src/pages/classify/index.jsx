@@ -4,6 +4,7 @@ import HeaderForm from '@/components/LableForm/index'
 import ColumnForm from '@/components/ColumnForm/index'
 import './index.less'
 import { deleteById, queryAll, saveOrUpdate } from '@/services/classify'
+import QiniuUpload from '@/components/qiniu/upload';
 
 export default props => {
   const [list, setList] = useState([]);
@@ -15,6 +16,18 @@ export default props => {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
+    },
+    {
+      label: '图片',
+      id: 'image',
+      options: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
+      render: <QiniuUpload single/>,
     },
     {
       title: '操作',
