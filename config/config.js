@@ -78,6 +78,7 @@ export default {
   },
   base:'/admin',
   publicPath:'/admin/',
+  history: 'hash',
   hash: true,
   targets: {
     ie: 11,
