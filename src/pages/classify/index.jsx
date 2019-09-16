@@ -18,18 +18,6 @@ export default props => {
       key: 'name',
     },
     {
-      label: '图片',
-      id: 'image',
-      options: {
-        rules: [
-          {
-            required: true,
-          },
-        ],
-      },
-      render: <QiniuUpload single/>,
-    },
-    {
       title: '操作',
       dataIndex: 'id',
       render: (text, record) => (
@@ -58,6 +46,18 @@ export default props => {
       id: 'name',
       options: {},
       render: <Input placeholder="名称"/>,
+    },
+    {
+      label: '图片',
+      id: 'image',
+      options: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
+      render: <QiniuUpload single/>,
     },
   ]
   useEffect(() => {
