@@ -33,9 +33,12 @@ export default function (props) {
     setPreviewVisible(true)
   }
   const handleChange = ({ file, fileList }) => {
-    console.log(file)
+    if (props.single) {
+      file.response && props.onChange && props.onChange(`${baseUrl}${file.response.key}`);
+      file.response && (setImg(`${baseUrl}${file.response.key}`));
+      return
+  }
     file.response && props.onChange && props.onChange(`${props.value ? `${props.value},` : ''}${baseUrl}${file.response.key}`);
-    file.response && props.single && (setImg(`${baseUrl}${file.response.key}`));
     setFileLists([...fileList])
   }
 
