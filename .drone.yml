@@ -1,0 +1,10 @@
+kind: pipeline
+name: drone
+steps:
+  - name: test
+    image: busybox
+    commands:
+      - nslookup google.com
+  - name: build
+    image: plugins/docker
+    repo: adminApp/adminApp
