@@ -7,4 +7,4 @@ steps:
       - nslookup google.com
   - name: build
     image: plugins/docker
-    repo: adminApp/adminApp
+    tags: ${DRONE_BUILD_NUMBER}
