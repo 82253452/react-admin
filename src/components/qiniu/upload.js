@@ -11,7 +11,7 @@ function getBase64(file) {
   });
 }
 
-const baseUrl = 'http://pxczv9bs6.bkt.clouddn.com/'
+const baseUrl = 'http://images.y456.cn/'
 
 export default function (props) {
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -36,9 +36,9 @@ export default function (props) {
     if (props.single) {
       file.response && props.onChange && props.onChange(`${baseUrl}${file.response.key}`);
       file.response && (setImg(`${baseUrl}${file.response.key}`));
-      return
-  }
-    file.response && props.onChange && props.onChange(`${props.value ? `${props.value},` : ''}${baseUrl}${file.response.key}`);
+  } else {
+      file.response && props.onChange && props.onChange(`${props.value ? `${props.value},` : ''}${baseUrl}${file.response.key}`);
+    }
     setFileLists([...fileList])
   }
 
