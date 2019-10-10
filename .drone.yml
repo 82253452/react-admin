@@ -62,6 +62,7 @@ steps:
     port: 222
     script:
       - cd /projects/ci_test
+      - docker-compose pull testadmin
       - docker-compose up -d
 
 volumes:
