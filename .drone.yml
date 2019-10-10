@@ -46,29 +46,22 @@ steps:
 - name: code-scp
   image: appleboy/drone-scp
   settings:
-    host:
-      from_secret: 114.115.250.201
-    username:
-      from_secret: root
+    host: 114.115.250.201
+    username: root
+    password: Sdfasiwek2#@8123
     port: 222
-    password:
-      from_secret: Sdfasiwek2#@8123
     target: /projects/ci_test
     source: docker-compose.yml
 
 - name: code-deploy
   image: appleboy/drone-ssh
   settings:
-    host:
-      from_secret: 114.115.250.201
-    username:
-      from_secret: root
+    host: 114.115.250.201
+    username: root
+    password: Sdfasiwek2#@8123
     port: 222
-    password:
-      from_secret: Sdfasiwek2#@8123
     script:
       - cd /projects/ci_test
-      - docker-compose pull ci_test
       - docker-compose up -d
 
 volumes:
