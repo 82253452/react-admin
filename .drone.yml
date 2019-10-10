@@ -37,7 +37,7 @@ steps:
 - name: build
   image: plugins/docker
   repo: testadmin/testadmin
-  tags: [1]
+  auto_tag: true
 
 volumes:
   - name: cache
