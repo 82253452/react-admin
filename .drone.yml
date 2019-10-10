@@ -36,7 +36,7 @@ steps:
 
 - name: build
   image: plugins/docker
-  repo: testadmin/testadmin
+  repo: swr.cn-north-1.myhuaweicloud.com/a82253452/testadmin
   auto_tag: true
 
 volumes:
