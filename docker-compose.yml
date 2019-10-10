@@ -4,10 +4,8 @@ networks:
     external:
       name: default-network
 services:
-  healthyadmin:
-    container_name: healthyadmin
-    image: yp/healthyadmin
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
+  testadmin:
+    container_name: testadmin
+    image: swr.cn-north-1.myhuaweicloud.com/a82253452/testadmin
     ports:
       - 8010:80
