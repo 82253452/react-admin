@@ -62,8 +62,8 @@ steps:
     port: 222
     script:
       - cd /projects/ci_test
-      - docker-compose pull testadmin
-      - docker-compose up -d
+      - docker-compose pull
+      - docker-compose up -d --force-recreate
 
 volumes:
   - name: cache
