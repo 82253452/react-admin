@@ -1,10 +1,7 @@
 kind: pipeline
 name: drone
 steps:
-  - name: test
-    image: busybox
-    commands:
-      - nslookup google.com
   - name: build
     image: plugins/docker
-    tags: ${DRONE_BUILD_NUMBER}
+    repo: testadmin/testadmin
+    tags: [1]
