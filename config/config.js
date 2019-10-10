@@ -130,7 +130,7 @@ export default {
         },
         {
           path: '/weixin',
-          name: '微信',
+          name: '微信2',
           icon: 'smile',
           component: './weixin/index',
         },
