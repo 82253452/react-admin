@@ -1,69 +1,69 @@
 kind: pipeline
 name: drone
 steps:
-- name: restore-cache
-  image: drillster/drone-volume-cache
-  settings:
-    restore: true
-    mount:
-      - ./.npm-cache
-      - ./node_modules
-  volumes:
-    - name: cache
-      path: /cache
+  - name: restore-cache
+    image: drillster/drone-volume-cache
+    settings:
+      restore: true
+      mount:
+        - ./.npm-cache
+        - ./node_modules
+    volumes:
+      - name: cache
+        path: /cache
 
-- name: npm-install
-  image: node:10
-  commands:
-    - npm config set cache ./.npm-cache --global
-    - npm install
+  - name: npm-install
+    image: node:10
+    commands:
+      - npm config set cache ./.npm-cache --global
+      - npm install
 
-- name: build-dist
-  image: node:10
-  commands:
-    - npm run build
+  - name: build-dist
+    image: node:10
+    commands:
+      - npm run build
 
-- name: rebuild-cache
-  image: drillster/drone-volume-cache
-  settings:
-    rebuild: true
-    mount:
-      - ./.npm-cache
-      - ./node_modules
-  volumes:
-    - name: cache
-      path: /cache
+  - name: rebuild-cache
+    image: drillster/drone-volume-cache
+    settings:
+      rebuild: true
+      mount:
+        - ./.npm-cache
+        - ./node_modules
+    volumes:
+      - name: cache
+        path: /cache
 
-- name: build
-  image: plugins/docker
-  settings:
-    username: cn-north-1@8BKNSGZGCNYMTOUZR9YS
-    password: e119c7e6f7a4572454fa96f7b8b6fa34d37a00e7e16caa3274b69c0c6eeded7b
-    registry: swr.cn-north-1.myhuaweicloud.com
-    repo: swr.cn-north-1.myhuaweicloud.com/a82253452/testadmin
-    auto_tag: true
+  - name: build
+    image: plugins/docker
+    settings:
+      username: cn-north-1@8BKNSGZGCNYMTOUZR9YS
+      password: e119c7e6f7a4572454fa96f7b8b6fa34d37a00e7e16caa3274b69c0c6eeded7b
+      registry: swr.cn-north-1.myhuaweicloud.com
+      repo: swr.cn-north-1.myhuaweicloud.com/a82253452/reactAdmin
+      auto_tag: true
 
-- name: code-scp
-  image: appleboy/drone-scp
-  settings:
-    host: 114.115.250.201
-    username: root
-    password: Sdfasiwek2#@8123
-    port: 222
-    target: /projects/ci_test
-    source: docker-compose.yml
+  - name: code-scp
+    image: appleboy/drone-scp
+    settings:
+      host: 114.115.250.201
+      username: root
+      password: Sdfasiwek2#@8123
+      port: 222
+      target: /projects/reactAdmin
+      source: docker-compose.yml
 
-- name: code-deploy
-  image: appleboy/drone-ssh
-  settings:
-    host: 114.115.250.201
-    username: root
-    password: Sdfasiwek2#@8123
-    port: 222
-    script:
-      - cd /projects/ci_test
-      - docker-compose pull
-      - docker-compose up -d --force-recreate
+  - name: code-deploy
+    image: appleboy/drone-ssh
+    settings:
+      host: 114.115.250.201
+      username: root
+      password: Sdfasiwek2#@8123
+      port: 222
+      script:
+        - cd /projects/reactAdmin
+        - docker-compose pull
+        - docker-compose up -d --force-recreate
 
 volumes:
   - name: cache
