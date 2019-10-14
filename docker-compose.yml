@@ -9,7 +9,7 @@ services:
     image: swr.cn-north-1.myhuaweicloud.com/a82253452/reactAdmin
     labels:
       - traefik.http.routers.reactAdmin-http.rule=Host(`zhihuizhan.net` && PathPrefix(`/admin`))
-      - traefik.http.routers.reactAdmin.rule=Host(`zhihuizhan.net`)
+      - traefik.http.routers.reactAdmin.rule=Host(`zhihuizhan.net` && PathPrefix(`/admin`))
       - traefik.http.routers.reactAdmin.tls.certresolver=mytlschallenge
       - traefik.http.middlewares.strip-prefix-admin.stripprefix.prefixes=/admin
       - traefik.http.routers.comapi.middlewares=strip-prefix-admin@docker
