@@ -8,8 +8,7 @@ services:
     container_name: drone-react-admin
     image: swr.cn-north-1.myhuaweicloud.com/a82253452/react-admin
     labels:
-      - traefik.http.routers.react-admin-http.rule=Host(`zhihuizhan.net` && PathPrefix(`/admin`))
-      - traefik.http.routers.react-admin.rule=Host(`zhihuizhan.net` && PathPrefix(`/admin`))
+      - traefik.http.routers.react-admin.rule=Host(`zhihuizhan.net`) && PathPrefix(`/admin`)
       - traefik.http.routers.react-admin.tls.certresolver=mytlschallenge
       - traefik.http.middlewares.strip-prefix-admin.stripprefix.prefixes=/admin
       - traefik.http.routers.comapi.middlewares=strip-prefix-admin@docker
