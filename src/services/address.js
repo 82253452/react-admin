@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 
-const BASE = '/address'
+const BASE = '/address';
 
 export function queryAll(data) {
   return request(`${BASE}/list/tree`, { params: data });
