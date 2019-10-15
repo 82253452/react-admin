@@ -11,4 +11,4 @@ services:
       - traefik.http.routers.react-admin.rule=Host(`zhihuizhan.net`) && PathPrefix(`/admin`)
       - traefik.http.routers.react-admin.tls.certresolver=mytlschallenge
       - traefik.http.middlewares.strip-prefix-admin.stripprefix.prefixes=/admin
-      - traefik.http.routers.comapi.middlewares=strip-prefix-admin@docker
+      - traefik.http.routers.react-admin.middlewares=strip-prefix-admin@docker
