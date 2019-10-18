@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Col, Divider, Form, Input, Popconfirm, Table } from 'antd';
-import HeaderForm from '@/components/LableForm/index'
-import ColumnForm from '@/components/ColumnForm/index'
-import './index.less'
-import { deleteById, queryAll, saveOrUpdate } from '@/services/classify'
+import { Col, Divider, Form, Input, Popconfirm, Select, Table } from 'antd';
+import HeaderForm from '@/components/LableForm/index';
+import ColumnForm from '@/components/ColumnForm/index';
+import './index.less';
+import { deleteById, queryAll, saveOrUpdate } from '@/services/classify';
 import QiniuUpload from '@/components/qiniu/upload';
 
 export default props => {
@@ -18,34 +18,57 @@ export default props => {
       key: 'name',
     },
     {
+      title: '类型',
+      dataIndex: 'type',
+      key: 'type',
+      render: (text, record) => <span>{text === 1 ? '店铺' : '文章'}</span>,
+    },
+    {
       title: '操作',
       dataIndex: 'id',
       render: (text, record) => (
         <span>
-        <a onClick={() => modify(record)}>修改</a>
-        <Divider type="vertical"/>
+          <a onClick={() => modify(record)}>修改</a>
+          <Divider type="vertical" />
           <Popconfirm
             title="确定删除数据?"
             onConfirm={() => deleteData(record.id)}
             okText="确定"
             cancelText="取消"
           >
-          <a href="#">删除</a>
-        </Popconfirm>
-      </span>
+            <a href="#">删除</a>
+          </Popconfirm>
+        </span>
       ),
     },
   ];
   const items = [
     {
       id: 'id',
-      render: <Input hidden/>,
+      render: <Input hidden />,
     },
     {
       label: '名称',
       id: 'name',
       options: {},
-      render: <Input placeholder="名称"/>,
+      render: <Input placeholder="名称" />,
+    },
+    {
+      label: '分类',
+      id: 'type',
+      options: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
+      render: (
+        <Select>
+          <Select.Option value={1}>店铺</Select.Option>
+          <Select.Option value={2}>文章</Select.Option>
+        </Select>
+      ),
     },
     {
       label: '图片',
@@ -57,29 +80,29 @@ export default props => {
           },
         ],
       },
-      render: <QiniuUpload single/>,
+      render: <QiniuUpload single />,
     },
-  ]
+  ];
   useEffect(() => {
     queryAllData();
-  }, [queryParam])
+  }, [queryParam]);
 
   function queryAllData() {
-    queryAll(queryParam).then(data => data && data.data && setList(data.data))
+    queryAll(queryParam).then(data => data && data.data && setList(data.data));
   }
 
   function onChange(e) {
     queryParam.pageNum = e.current;
-    setQueryParam({ ...queryParam })
+    setQueryParam({ ...queryParam });
   }
 
   function modify(record) {
-    setVisible(true)
-    formRef.current.setFieldsValue(record)
+    setVisible(true);
+    formRef.current.setFieldsValue(record);
   }
 
   function deleteData(id) {
-    deleteById(id).then(() => queryAllData())
+    deleteById(id).then(() => queryAllData());
   }
 
   function handleSearch(values) {
@@ -87,19 +110,26 @@ export default props => {
   }
 
   function hanldeAdd() {
-    formRef.current.resetFields()
-    setVisible(true)
+    formRef.current.resetFields();
+    setVisible(true);
   }
 
   function handleSubmit(value) {
-    setVisible(false)
-    saveOrUpdate(value).then(() => queryAllData())
+    setVisible(false);
+    saveOrUpdate(value).then(() => queryAllData());
   }
 
-  return (<div>
-    <HeaderForm handleSearch={handleSearch} hanldeAdd={hanldeAdd}/>
-    <Table columns={columns} dataSource={list} onChange={onChange}/>
-    <ColumnForm ref={formRef} visible={visible} handleSubmit={handleSubmit} items={items}
-                handleCancel={() => setVisible(false)}></ColumnForm>
-  </div>)
-}
+  return (
+    <div>
+      <HeaderForm handleSearch={handleSearch} hanldeAdd={hanldeAdd} />
+      <Table columns={columns} dataSource={list} onChange={onChange} />
+      <ColumnForm
+        ref={formRef}
+        visible={visible}
+        handleSubmit={handleSubmit}
+        items={items}
+        handleCancel={() => setVisible(false)}
+      ></ColumnForm>
+    </div>
+  );
+};
