@@ -76,8 +76,8 @@ export default {
     // defaultGitUrl: 'https://gitee.com/ant-design/pro-blocks',
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
-  base:'/admin',
-  publicPath:'/admin/',
+  base: '/',
+  publicPath: '/',
   history: 'hash',
   hash: true,
   targets: {
@@ -87,52 +87,66 @@ export default {
   // umi routes: https://umijs.org/zh/guide/router.html
   routes: [
     {
+      path: '/adminUser',
+      component: '../layouts/BlankLayout',
+      routes: [
+        {
+          name: '首页',
+          path: '/adminUser/account-center',
+          component: './adminUser/account-center',
+          authority: ['user'],
+        },
+        {
+          name: '详情页',
+          path: '/adminUser/book/:id',
+          component: './adminUser/book/$detail',
+          authority: ['user'],
+        },
+      ],
+    },
+    {
+      path: '/login',
+      component: '../layouts/UserLayout',
+      routes: [
+        {
+          path: '/login',
+          component: './login',
+        },
+      ],
+    },
+    {
       path: '/',
       component: '../layouts/BasicLayout',
       Routes: ['src/pages/Authorized'],
-      authority: ['admin', 'user'],
+      authority: ['admin'],
       routes: [
         {
           path: '/',
-          name: 'welcome',
+          name: '首页',
           icon: 'smile',
           component: './Welcome',
+          authority: ['admin'],
         },
         {
-          path: '/userPage',
-          name: '会员',
+          path: '/book',
+          name: '小说',
           icon: 'smile',
-          component: './user/index',
+          component: './book/index',
+          authority: ['admin'],
         },
         {
-          path: '/shoPage',
-          name: '商店',
+          path: '/tag',
+          name: '标签',
           icon: 'smile',
-          component: './shop/index',
+          component: './tag/index',
+          authority: ['admin'],
         },
         {
-          path: '/addressPage',
-          name: '商圈',
+          path: '/userInfo',
+          name: '作者',
           icon: 'smile',
-          component: './address/index',
-        },
-        {
-          path: '/classifyPage',
-          name: '分类',
-          icon: 'smile',
-          component: './classify/index',
-        },
-        {
-          path: '/privilegePage',
-          name: '特权卡',
-          icon: 'smile',
-          component: './privilege/index',
-        },
-        {
-          path: '/weixin',
-          name: '微信2',
-          icon: 'smile',
-          component: './weixin/index',
+          component: './userInfo/index',
+          authority: ['admin'],
         },
         {
           component: './404',
@@ -149,8 +163,10 @@ export default {
   },
   define: {
     ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION:
-      ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION || '', // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-      "process.env.apiUrl": 'https://zhihuizhan.net/api',
+      ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION || '',
+    // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
+    // "process.env.apiUrl": 'https://zhihuizhan.net/api',
+    'process.env.apiUrl': 'http://localhost:8080',
   },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
@@ -186,36 +202,46 @@ export default {
     basePath: '/admin',
   },
   chainWebpack: webpackPlugin,
-
   proxy: {
-    '/shop/*': {
-      target: 'http://localhost:8080/',
-      changeOrigin: true,
-    },
-    '/classify/*': {
-      target: 'http://localhost:8080/',
-      changeOrigin: true,
-    },
-    '/address/*': {
-      target: 'http://localhost:8080/',
-      changeOrigin: true,
-    },
-    '/wexin/*': {
-      target: 'http://localhost:8080/',
-      changeOrigin: true,
-    },
-    '/common/*': {
-      target: 'http://localhost:8080/',
-      changeOrigin: true,
-    },
-    '/privilege/*': {
-      target: 'http://localhost:8080/',
-      changeOrigin: true,
-    },
-    '/user/*': {
-      target: 'http://localhost:8080/',
-      changeOrigin: true,
-    },
+    // '/api/login/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/tag/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/shop/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/book/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/classify/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/address/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/wexin/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/common/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/privilege/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
+    // '/user/*': {
+    //   target: 'http://localhost:8080/',
+    //   changeOrigin: true,
+    // },
   },
-
 };

@@ -23,13 +23,13 @@ const menuDataRender = menuList =>
   });
 
 const footerRender = (_, defaultDom) => {
-  if (!isAntDesignPro()) {
-    return defaultDom;
-  }
+  // if (!isAntDesignPro()) {
+  //   return defaultDom;
+  // }
 
   return (
     <>
-      {defaultDom}
+      {/*{defaultDom}*/}
       <div
         style={{
           padding: '0px 24px 24px',

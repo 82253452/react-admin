@@ -4,6 +4,8 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import { TOKEN } from '@/utils/const';
+import router from 'umi/router';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -55,8 +57,18 @@ const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
 });
 // response拦截器, 处理response
-request.interceptors.response.use((response, options) => {
-  console.log(response)
+request.interceptors.response.use(async (response, options) => {
+  const { code, message } = await response.clone().json();
+  if (code === 100) {
+    router.push('/login');
+  }
+  if (code !== 0) {
+    message &&
+      notification.error({
+        message,
+      });
+  }
+
   return response;
 });
 // 中间件，对请求前、响应后做处理
@@ -64,9 +76,9 @@ request.use(async (ctx, next) => {
   const { req } = ctx;
   const { url, options } = req;
   ctx.req.url = `${process.env.apiUrl}${url}`;
+  options.headers = { ...options.headers, Token: localStorage.getItem(TOKEN) };
   ctx.req.options = {
     ...options,
-    foo: 'foo',
   };
   await next();
 
@@ -75,5 +87,5 @@ request.use(async (ctx, next) => {
   if (!success) {
     // 对异常情况做对应处理
   }
-})
+});
 export default request;
