@@ -1,12 +1,11 @@
 import { Avatar, Card, Dropdown, Icon, List, Menu, Tooltip } from 'antd';
 import React from 'react';
-
-import { connect } from 'dva';
 import numeral from 'numeral';
-import { ModalState } from '../../model';
+import router from 'umi/router';
 import stylesApplications from './index.less';
+import BookContainer from '@/hookModels/book';
 
-export function formatWan(val: number) {
+function formatWan(val: number) {
   const v = val * 1;
   if (!v || Number.isNaN(v)) return '';
 
@@ -32,39 +31,31 @@ export function formatWan(val: number) {
   return result;
 }
 
-const Applications: React.FC<Partial<ModalState>> = props => {
-  const { list } = props;
+export default () => {
+  const { listEditor: list } = BookContainer.useContainer();
   const itemMenu = (
     <Menu>
       <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.alipay.com/">
-          1st menu item
+        <a target="_blank" rel="noopener noreferrer" href="#">
+          下架
         </a>
       </Menu.Item>
       <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.taobao.com/">
-          2nd menu item
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.tmall.com/">
-          3d menu item
+        <a target="_blank" rel="noopener noreferrer" href="#">
+          签约
         </a>
       </Menu.Item>
     </Menu>
   );
-  const CardInfo: React.FC<{
-    activeUser: React.ReactNode;
-    newUser: React.ReactNode;
-  }> = ({ activeUser, newUser }) => (
+  const CardInfo = ({ activeUser, newUser }) => (
     <div className={stylesApplications.cardInfo}>
       <div>
-        <p>活跃用户</p>
-        <p>{activeUser}</p>
+        <p>订阅</p>
+        <p>{activeUser || 0}</p>
       </div>
       <div>
-        <p>新增用户</p>
-        <p>{newUser}</p>
+        <p>浏览</p>
+        <p>{newUser || 0}</p>
       </div>
     </div>
   );
@@ -83,7 +74,11 @@ const Applications: React.FC<Partial<ModalState>> = props => {
               <Tooltip key="download" title="下载">
                 <Icon type="download" />
               </Tooltip>,
-              <Tooltip title="编辑" key="edit">
+              <Tooltip
+                title="编辑"
+                key="edit"
+                onClick={() => router.push(`/adminUser/book/${item.id}`)}
+              >
                 <Icon type="edit" />
               </Tooltip>,
               <Tooltip title="分享" key="share">
@@ -94,11 +89,11 @@ const Applications: React.FC<Partial<ModalState>> = props => {
               </Dropdown>,
             ]}
           >
-            <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />
+            <Card.Meta avatar={<Avatar size="small" src={item.image} />} title={item.name} />
             <div className={stylesApplications.cardItemContent}>
               <CardInfo
-                activeUser={formatWan(item.activeUser)}
-                newUser={numeral(item.newUser).format('0,0')}
+                activeUser={formatWan(item.subscribeNum)}
+                newUser={numeral(item.likeNum).format('0,0')}
               />
             </div>
           </Card>
@@ -107,7 +102,3 @@ const Applications: React.FC<Partial<ModalState>> = props => {
     />
   );
 };
-
-export default connect(({ accountCenter }: { accountCenter: ModalState }) => ({
-  list: accountCenter.list,
-}))(Applications);

@@ -1,14 +1,14 @@
 import { Icon, List, Tag } from 'antd';
 import React from 'react';
-
-import { connect } from 'dva';
 import ArticleListContent from '../ArticleListContent';
 import { ListItemDataType } from '../../data.d';
-import { ModalState } from '../../model';
 import styles from './index.less';
+import BookContainer from '@/hookModels/book';
+import CurrentUserContainer from '@/hookModels/currentUser';
 
-const Articles: React.FC<Partial<ModalState>> = props => {
-  const { list } = props;
+export default () => {
+  const { list } = BookContainer.useContainer();
+  const { user } = CurrentUserContainer.useContainer();
   const IconText: React.FC<{
     type: string;
     text: React.ReactNode;
@@ -37,14 +37,14 @@ const Articles: React.FC<Partial<ModalState>> = props => {
           <List.Item.Meta
             title={
               <a className={styles.listItemMetaTitle} href={item.href}>
-                {item.title}
+                {item.name}
               </a>
             }
             description={
               <span>
-                <Tag>Ant Design</Tag>
-                <Tag>设计语言</Tag>
-                <Tag>蚂蚁金服</Tag>
+                {item.bookTags.map(t => (
+                  <Tag>{t.name}</Tag>
+                ))}
               </span>
             }
           />
@@ -54,7 +54,3 @@ const Articles: React.FC<Partial<ModalState>> = props => {
     />
   );
 };
-
-export default connect(({ accountCenter }: { accountCenter: ModalState }) => ({
-  list: accountCenter.list,
-}))(Articles);

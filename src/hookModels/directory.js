@@ -1,18 +1,25 @@
-import { deleteById, queryAll, queryById } from '@/services/directory';
+import { deleteById, queryAll, queryById, update, save } from '@/services/directory';
 import { createContainer } from 'unstated-next';
 import usePage from '@/utils/hooks/usePage';
 import useQuery from '@/utils/hooks/useQuery';
 
 export function useData() {
-  const { list, param, setParam, fetch, reload, loading } = usePage([], {}, queryAll);
-  const { data, setData, query } = useQuery({}, {}, queryById);
+  const {
+    list,
+    param,
+    setParam,
+    fetch,
+    reload,
+    loading,
+    pagination,
+    setPagination,
+    push,
+  } = usePage([], {}, queryAll);
+  const { data, query, loading: queryLoading } = useQuery({}, {}, queryById);
 
-  function addDirectory() {
-    list.push({
-      name: '',
-      index: 1,
-      editable: true,
-    });
+  function addDirectory(p) {
+    save(p);
+    setParam({ ...param, pageNum: 1 });
   }
 
   function modify(record) {
@@ -22,6 +29,7 @@ export function useData() {
 
   function modifyName(record, e) {
     record.name = e.target.value;
+    update(record);
     reload();
   }
 
@@ -35,7 +43,11 @@ export function useData() {
   }
 
   function modifyData(record) {
-    setData(record);
+    query(record.id);
+  }
+
+  function updateContent(content) {
+    update({ ...data, content });
   }
 
   return {
@@ -44,12 +56,16 @@ export function useData() {
     param,
     fetch,
     query,
+    queryLoading,
+    pagination,
+    loading,
     addDirectory,
     deleteData,
     modify,
     changePage,
     modifyName,
     modifyData,
+    updateContent,
   };
 }
 

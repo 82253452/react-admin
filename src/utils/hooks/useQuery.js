@@ -7,16 +7,13 @@ export default function(init, paramData, api) {
   const [loading, setLoading] = useState(true);
 
   useUpdateEffect(() => {
-    setLoading(false);
-  }, [data]);
-
-  useUpdateEffect(() => {
     query();
   }, [param]);
 
   async function query(p) {
-    loading || setLoading(true);
-    await api(p || param).then(res => setData(res.data));
+    setLoading(true);
+    await api(p).then(res => setData(res.data));
+    setLoading(false);
   }
 
   return { data, param, query, setData, setParam, loading, setLoading };

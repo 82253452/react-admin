@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card, Descriptions, Divider, Input, Popconfirm, Table } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ContentEditor from '@/pages/book/ContentEditor';
 import BookContainer from '@/hookModels/book';
 import DirectoryContainer from '@/hookModels/directory';
+import ColumnForm from '@/components/ColumnForm';
 
 export default ({ match }) => {
   const { data, query } = BookContainer.useContainer();
@@ -16,9 +17,12 @@ export default ({ match }) => {
     changePage,
     modifyName,
     modifyData,
+    pagination,
+    loading,
   } = DirectoryContainer.useContainer();
   const [trogle, setTrogle] = useState(false);
-
+  const [columnTrogle, setColumnTrogle] = useState(false);
+  const formRef = useRef(null);
   const columns = [
     {
       title: '章节',
@@ -74,6 +78,56 @@ export default ({ match }) => {
     },
   ];
 
+  const items = [
+    {
+      id: 'id',
+      render: <Input hidden />,
+    },
+    {
+      id: 'bookId',
+      render: <Input hidden />,
+      options: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
+    },
+    {
+      id: 'index',
+      render: <Input hidden />,
+      options: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
+    },
+    {
+      label: '目录名称',
+      id: 'name',
+      options: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
+      render: <Input placeholder="名称" />,
+    },
+  ];
+
+  function handleSubmit(value) {
+    addDirectory(value);
+    setColumnTrogle(!columnTrogle);
+  }
+  function handleAdd() {
+    formRef.current.resetFields();
+    formRef.current.setFieldsValue({ bookId: data.id, index: pagination.total + 1 });
+    setColumnTrogle(true);
+  }
   useEffect(() => {
     query(match.params.id);
     fetch();
@@ -98,17 +152,20 @@ export default ({ match }) => {
           dataSource={list}
           columns={columns}
           onChange={changePage}
+          pagination={pagination}
+          loading={loading}
         />
         <Button
           style={{ width: '100%', marginTop: 16, marginBottom: 8 }}
           type="dashed"
-          onClick={addDirectory}
+          onClick={handleAdd}
           icon="plus"
         >
           添加章节
         </Button>
       </Card>
       <ContentEditor trogle={trogle} />
+      <ColumnForm ref={formRef} trogle={columnTrogle} handleSubmit={handleSubmit} items={items} />
     </PageHeaderWrapper>
   );
 };

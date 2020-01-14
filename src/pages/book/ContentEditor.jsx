@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Icon, message, Modal, Select, Upload } from 'antd';
-import { update } from '@/services/directory';
+import { Icon, Modal, Spin, Upload } from 'antd';
 import BraftEditor from 'braft-editor';
 import { ContentUtils } from 'braft-utils';
 import 'braft-editor/dist/index.css';
@@ -8,7 +7,7 @@ import { geToken } from '@/services/common';
 import DirectoryContainer from '@/hookModels/directory';
 
 export default function({ trogle = false }) {
-  const { data } = DirectoryContainer.useContainer();
+  const { data, updateContent, queryLoading: loading } = DirectoryContainer.useContainer();
   const [editorState, setEditorState] = useState(BraftEditor.createEditorState(data.content));
   const [visible, setVisible] = useState(!trogle);
   const [uploaData, setUploaData] = useState({});
@@ -67,15 +66,15 @@ export default function({ trogle = false }) {
   }
 
   function submitContent() {
-    data.content = editorState.toHTML();
-    update(data);
+    const content = editorState.toHTML();
+    updateContent(content);
   }
 
   function handleOk() {
+    updateContent(editorState.toHTML());
     setVisible(!visible);
   }
   function handleCancel(e) {
-    console.log(e);
     setVisible(!visible);
   }
 
@@ -89,13 +88,17 @@ export default function({ trogle = false }) {
       okText="保存"
       cancelText="关闭"
     >
-      <BraftEditor
-        value={editorState}
-        onChange={handleEditorChange}
-        onSave={submitContent}
-        controls={controls}
-        extendControls={extendControls}
-      />
+      {loading ? (
+        <Spin />
+      ) : (
+        <BraftEditor
+          value={editorState}
+          onChange={handleEditorChange}
+          onSave={submitContent}
+          controls={controls}
+          extendControls={extendControls}
+        />
+      )}
     </Modal>
   );
 }

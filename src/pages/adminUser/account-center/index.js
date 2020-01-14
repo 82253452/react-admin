@@ -15,7 +15,7 @@ const operationTabList = [
     key: 'articles',
     tab: (
       <span>
-        关注 <span style={{ fontSize: 14 }}>(8)</span>
+        新书 <span style={{ fontSize: 14 }}>(8)</span>
       </span>
     ),
   },
@@ -23,7 +23,7 @@ const operationTabList = [
     key: 'applications',
     tab: (
       <span>
-        已完结 <span style={{ fontSize: 14 }}>(8)</span>
+        更新中 <span style={{ fontSize: 14 }}>(8)</span>
       </span>
     ),
   },
@@ -31,7 +31,7 @@ const operationTabList = [
     key: 'projects',
     tab: (
       <span>
-        我的 <span style={{ fontSize: 14 }}>(8)</span>
+        已完结 <span style={{ fontSize: 14 }}>(8)</span>
       </span>
     ),
   },
@@ -44,45 +44,24 @@ export default () => {
     newTags: [],
     inputVisible: false,
     inputValue: '',
-    tabKey: 'projects',
+    tabKey: 'applications',
   });
 
   let inputRef = useRef(null);
   let { newTags = [], inputVisible, inputValue, tabKey } = state;
-  const { fetchOwnList } = BookContainer.useContainer();
+  const { fetchOwnList, fetchEditorList, fetch } = BookContainer.useContainer();
   useEffectOnce(() => {
     fetchOwnList();
+    fetchEditorList();
+    fetch();
   });
 
-  // const { currentUser = {}, currentUserLoading } = props;
-  // const dataLoading = currentUserLoading || !(currentUser && Object.keys(currentUser).length);
-  // const state: AccountCenterState = ;
-
-  // public input: Input | null | undefined = undefined;
-  // useEffect(() => {
-  //   // fetch()
-  //   console.log(222)
-  // }, [])
-
-  // const componentDidMount() {
-  //   const { dispatch } = props;
-  //   console.log(props)
-  //   dispatch({
-  //     type: 'book/fetch',
-  //   });
-  // }
-
   const onTabChange = key => {
-    // If you need to sync state to url
-    // const { match } = props;
-    // router.push(`${match.url}/${key}`);
     setState({ ...state, tabKey: key });
-    // setState({ tabKey: key as AccountCenterState['tabKey'] });
   };
 
   const showInput = () => {
     setState({ ...state, inputVisible: true });
-    // setState({ inputVisible: true }, () => this.input && this.input.focus());
   };
 
   const saveInputRef = input => {
@@ -98,12 +77,6 @@ export default () => {
     if (inputValue && newTags.filter(tag => tag.label === inputValue).length === 0) {
       newTags = [...newTags, { key: `new-${newTags.length}`, label: inputValue }];
     }
-    // setState({
-    //   ...state,
-    //   newTags,
-    //   inputVisible: false,
-    //   inputValue: '',
-    // });
   };
 
   const renderChildrenByTabKey = () => {
