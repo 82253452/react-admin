@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Descriptions, Divider, Input, Popconfirm, Table } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { deleteById, queryById } from '@/services/book';
-import { queryAll } from '@/services/directory';
 import ContentEditor from '@/pages/book/ContentEditor';
+import BookContainer from '@/hookModels/book';
+import DirectoryContainer from '@/hookModels/directory';
 
 export default ({ match }) => {
-  const [data, setData] = useState({});
-  const [editorRecord, setEditorRecord] = useState({});
-  const [list, setList] = useState([]);
+  const { data, query } = BookContainer.useContainer();
+  const {
+    list,
+    fetch,
+    addDirectory,
+    deleteData,
+    modify,
+    changePage,
+    modifyName,
+    modifyData,
+  } = DirectoryContainer.useContainer();
   const [trogle, setTrogle] = useState(false);
-  const [queryParam, setQueryParam] = useState({
-    pageSize: 10,
-    pageNum: 1,
-    bookId: match.params.id,
-  });
+
   const columns = [
     {
       title: '章节',
@@ -32,11 +36,8 @@ export default ({ match }) => {
             <Input
               value={text}
               autoFocus
-              onChange={e => {
-                record.name = e.target.value;
-                setList([...list]);
-              }}
-              onBlur={() => handleBlur(record)}
+              onChange={e => modifyName(record, e)}
+              onBlur={() => modify(record)}
               placeholder="简介"
             />
           );
@@ -51,7 +52,7 @@ export default ({ match }) => {
         <span>
           <a
             onClick={() => {
-              setEditorRecord(record);
+              modifyData(record);
               setTrogle(!trogle);
             }}
           >
@@ -73,53 +74,10 @@ export default ({ match }) => {
     },
   ];
 
-  function modifyContent() {}
-
-  function modify(record) {
-    if (!record.editable) {
-      record.editable = !record.editable;
-      setList([...list]);
-    }
-  }
-
-  function handleBlur(record) {
-    record.editable = !record.editable;
-    setList([...list]);
-  }
-
-  function deleteData(id) {
-    deleteById(id).then(() => queryAllData());
-  }
-
   useEffect(() => {
-    function getData() {
-      queryById(match.params.id).then(res => setData(res.data));
-    }
-
-    getData();
+    query(match.params.id);
+    fetch();
   }, []);
-
-  useEffect(() => {
-    queryAllData();
-  }, [queryParam]);
-
-  function queryAllData() {
-    queryAll().then(res => setList(res.data.list));
-  }
-
-  function onChange(e) {
-    queryParam.pageNum = e.current;
-    setQueryParam({ ...queryParam });
-  }
-
-  function newDirectory() {
-    list.push({
-      name: '',
-      index: 1,
-      editable: true,
-    });
-    setList([...list]);
-  }
 
   return (
     <PageHeaderWrapper>
@@ -139,18 +97,18 @@ export default ({ match }) => {
           style={{ marginBottom: 24 }}
           dataSource={list}
           columns={columns}
-          onChange={onChange}
+          onChange={changePage}
         />
         <Button
           style={{ width: '100%', marginTop: 16, marginBottom: 8 }}
           type="dashed"
-          onClick={newDirectory}
+          onClick={addDirectory}
           icon="plus"
         >
           添加章节
         </Button>
       </Card>
-      <ContentEditor trogle={trogle} data={editorRecord} />
+      <ContentEditor trogle={trogle} />
     </PageHeaderWrapper>
   );
 };

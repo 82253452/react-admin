@@ -1,20 +1,15 @@
 import React, { useEffect } from 'react';
-import { connect } from 'dva';
-import { Layout, Menu, Breadcrumb } from 'antd';
-import Authorized from '@/utils/Authorized';
-import Link from 'umi/link';
+import { Breadcrumb, Layout } from 'antd';
 import router from 'umi/router';
+import CurrentUserContainer from '../hookModels/currentUser';
+import SettingContainer from '../hookModels/setting';
 
-const CustomLayout = ({ dispatch, children, settings, location }) => {
+export default ({ children, location }) => {
+  const { user, query: currentUser } = CurrentUserContainer.useContainer();
+  const { getSetting } = SettingContainer.useContainer();
   useEffect(() => {
-    if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
-      dispatch({
-        type: 'settings/getSetting',
-      });
-    }
+    currentUser();
+    getSetting();
   }, []);
 
   function goPrev() {
@@ -40,7 +35,3 @@ const CustomLayout = ({ dispatch, children, settings, location }) => {
     </Layout>
   );
 };
-export default connect(({ global, settings }) => ({
-  collapsed: global.collapsed,
-  settings,
-}))(CustomLayout);

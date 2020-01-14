@@ -5,8 +5,10 @@ import BraftEditor from 'braft-editor';
 import { ContentUtils } from 'braft-utils';
 import 'braft-editor/dist/index.css';
 import { geToken } from '@/services/common';
+import DirectoryContainer from '@/hookModels/directory';
 
-export default function({ data, trogle = false }) {
+export default function({ trogle = false }) {
+  const { data } = DirectoryContainer.useContainer();
   const [editorState, setEditorState] = useState(BraftEditor.createEditorState(data.content));
   const [visible, setVisible] = useState(!trogle);
   const [uploaData, setUploaData] = useState({});
