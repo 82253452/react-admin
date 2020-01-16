@@ -1,25 +1,29 @@
-import { Icon, List, Tag } from 'antd';
+import { Icon, List, Popconfirm, Tag } from 'antd';
 import React from 'react';
+import router from 'umi/router';
 import ArticleListContent from '../ArticleListContent';
-import { ListItemDataType } from '../../data.d';
 import styles from './index.less';
 import BookContainer from '@/hookModels/book';
-import CurrentUserContainer from '@/hookModels/currentUser';
 
 export default () => {
-  const { list } = BookContainer.useContainer();
-  const { user } = CurrentUserContainer.useContainer();
-  const IconText: React.FC<{
-    type: string;
-    text: React.ReactNode;
-  }> = ({ type, text }) => (
-    <span>
+  const { list, pushBook } = BookContainer.useContainer();
+  const IconText = ({ type, text, onClick }) => (
+    <span onClick={() => onClick && onClick()}>
       <Icon type={type} style={{ marginRight: 8 }} />
       {text}
     </span>
   );
+
+  function toDetail(id) {
+    router.push(`/adminUser/book/${id}`);
+  }
+
+  function bookPush(data) {
+    pushBook(data)
+  }
+
   return (
-    <List<ListItemDataType>
+    <List
       size="large"
       className={styles.articleList}
       rowKey="id"
@@ -29,9 +33,15 @@ export default () => {
         <List.Item
           key={item.id}
           actions={[
-            <IconText key="star" type="star-o" text={item.star} />,
-            <IconText key="like" type="like-o" text={item.like} />,
-            <IconText key="message" type="message" text={item.message} />,
+            <Popconfirm
+              title="确认发布?"
+              onConfirm={() => bookPush(item)}
+              okText="确定"
+              cancelText="取消"
+            >
+              <IconText key="status" type="copy" text="发布"/>
+            </Popconfirm>,
+            <IconText key="edit" type="edit" text="编辑" onClick={() => toDetail(item.id)}/>,
           ]}
         >
           <List.Item.Meta

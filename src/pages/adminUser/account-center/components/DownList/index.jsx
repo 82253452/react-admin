@@ -1,15 +1,15 @@
-import { Avatar, Card, Dropdown, Icon, List, Menu, Tooltip } from 'antd';
+import { Avatar, Card, Dropdown, Icon, List, Menu, Popconfirm, Tooltip } from 'antd';
 import React from 'react';
 import numeral from 'numeral';
 import router from 'umi/router';
 import stylesApplications from './index.less';
 import BookContainer from '@/hookModels/book';
 
-function formatWan(val: number) {
+function formatWan(val) {
   const v = val * 1;
   if (!v || Number.isNaN(v)) return '';
 
-  let result: React.ReactNode = val;
+  let result = val;
   if (val > 10000) {
     result = (
       <span>
@@ -32,21 +32,8 @@ function formatWan(val: number) {
 }
 
 export default () => {
-  const { listEditor: list } = BookContainer.useContainer();
-  const itemMenu = (
-    <Menu>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          下架
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="#">
-          签约
-        </a>
-      </Menu.Item>
-    </Menu>
-  );
+  const { downlist: list, finishBook, upBook } = BookContainer.useContainer();
+
   const CardInfo = ({ activeUser, newUser }) => (
     <div className={stylesApplications.cardInfo}>
       <div>
@@ -59,6 +46,11 @@ export default () => {
       </div>
     </div>
   );
+
+  function onFinishBook(d) {
+    finishBook(d)
+  }
+
   return (
     <List
       rowKey="id"
@@ -84,7 +76,25 @@ export default () => {
               <Tooltip title="分享" key="share">
                 <Icon type="share-alt" />
               </Tooltip>,
-              <Dropdown overlay={itemMenu} key="ellipsis">
+              <Dropdown overlay={(<Menu>
+                <Menu.Item>
+                  <Popconfirm
+                    title="确认完结?"
+                    onConfirm={() => upBook(item)}
+                    okText="确定"
+                    cancelText="取消"
+                  >
+                    <a target="_blank" rel="noopener noreferrer">
+                      上架
+                    </a>
+                  </Popconfirm>
+                </Menu.Item>
+                <Menu.Item>
+                  <a target="_blank" rel="noopener noreferrer" href="#">
+                    签约
+                  </a>
+                </Menu.Item>
+              </Menu>)} key="ellipsis">
                 <Icon type="ellipsis" />
               </Dropdown>,
             ]}

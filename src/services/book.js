@@ -7,6 +7,10 @@ export function queryAll(data) {
   return request(`${BASE}`, { params: data });
 }
 
+export function queryAllBook(data) {
+  return request(`${BASE}/queryAllBook`, { params: data });
+}
+
 export function queryById(id) {
   return request(`${BASE}/${id}`, { method: GET });
 }
@@ -21,4 +25,7 @@ export function update(data) {
 
 export function save(data) {
   return request(`${BASE}`, { method: POST, data });
+}
+export function updateBookStatus(data) {
+  return request(`${BASE}`, { method: PUT, data });
 }

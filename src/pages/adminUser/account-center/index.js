@@ -6,39 +6,22 @@ import { useEffectOnce } from 'react-use';
 import Projects from './components/Projects';
 import Articles from './components/Articles';
 import Applications from './components/Applications';
+import DownList from './components/DownList';
 import styles from './Center.less';
 import CurrentUserContainer from '@/hookModels/currentUser';
 import BookContainer from '@/hookModels/book';
 
-const operationTabList = [
-  {
-    key: 'articles',
-    tab: (
-      <span>
-        新书 <span style={{ fontSize: 14 }}>(8)</span>
-      </span>
-    ),
-  },
-  {
-    key: 'applications',
-    tab: (
-      <span>
-        更新中 <span style={{ fontSize: 14 }}>(8)</span>
-      </span>
-    ),
-  },
-  {
-    key: 'projects',
-    tab: (
-      <span>
-        已完结 <span style={{ fontSize: 14 }}>(8)</span>
-      </span>
-    ),
-  },
-];
-
 export default () => {
   const { user: currentUser, loading: currentUserLoading } = CurrentUserContainer.useContainer();
+  const {
+    init,
+    pagination,
+    ownPagination,
+    editorPagination,
+    downPagination,
+  } = BookContainer.useContainer();
+
+  let inputRef = useRef(null);
 
   const [state, setState] = useState({
     newTags: [],
@@ -47,14 +30,46 @@ export default () => {
     tabKey: 'applications',
   });
 
-  let inputRef = useRef(null);
-  let { newTags = [], inputVisible, inputValue, tabKey } = state;
-  const { fetchOwnList, fetchEditorList, fetch } = BookContainer.useContainer();
+  const { newTags = [], inputVisible, inputValue, tabKey } = state;
+
   useEffectOnce(() => {
-    fetchOwnList();
-    fetchEditorList();
-    fetch();
+    init();
   });
+
+  const operationTabList = [
+    {
+      key: 'articles',
+      tab: (
+        <span>
+          新书 <span style={{ fontSize: 14 }}>({pagination.total})</span>
+        </span>
+      ),
+    },
+    {
+      key: 'applications',
+      tab: (
+        <span>
+          更新中 <span style={{ fontSize: 14 }}>({editorPagination.total})</span>
+        </span>
+      ),
+    },
+    {
+      key: 'down',
+      tab: (
+        <span>
+          已下架 <span style={{ fontSize: 14 }}>({downPagination.total})</span>
+        </span>
+      ),
+    },
+    {
+      key: 'projects',
+      tab: (
+        <span>
+          已完结 <span style={{ fontSize: 14 }}>({ownPagination.total})</span>
+        </span>
+      ),
+    },
+  ];
 
   const onTabChange = key => {
     setState({ ...state, tabKey: key });
@@ -75,7 +90,10 @@ export default () => {
 
   const handleInputConfirm = () => {
     if (inputValue && newTags.filter(tag => tag.label === inputValue).length === 0) {
-      newTags = [...newTags, { key: `new-${newTags.length}`, label: inputValue }];
+      setState({
+        ...state,
+        newTags: [...newTags, { key: `new-${newTags.length}`, label: inputValue }],
+      });
     }
   };
 
@@ -85,6 +103,9 @@ export default () => {
     }
     if (tabKey === 'applications') {
       return <Applications />;
+    }
+    if (tabKey === 'down') {
+      return <DownList />;
     }
     if (tabKey === 'articles') {
       return <Articles />;
@@ -114,18 +135,7 @@ export default () => {
                     {currentUser.grade}
                   </p>
                   <p>
-                    <i className={styles.address} />
-                    {/* {(currentUser.geographic || { province: { label: '无' } }).province.label} */}
-                    {/* { */}
-                    {/*  ( */}
-                    {/*    currentUser.geographic || { */}
-                    {/*      city: { */}
-                    {/*        label: '无', */}
-                    {/*      }, */}
-                    {/*    } */}
-                    {/*  ).city.label */}
-                    {/* } */}
-                    {currentUser.province || '无'}
+                    <i className={styles.address} />z {currentUser.province || '无'}
                     {currentUser.city || '无'}
                   </p>
                 </div>

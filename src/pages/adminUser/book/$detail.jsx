@@ -65,14 +65,6 @@ export default ({ match }) => {
           <Divider type="vertical" />
           <a onClick={() => modify(record)}>{record.editable ? '保存' : '修改'}</a>
           <Divider type="vertical" />
-          <Popconfirm
-            title="确定删除数据?"
-            onConfirm={() => deleteData(record.id)}
-            okText="确定"
-            cancelText="取消"
-          >
-            <a href="#">删除</a>
-          </Popconfirm>
         </span>
       ),
     },
@@ -126,7 +118,7 @@ export default ({ match }) => {
   function handleAdd() {
     formRef.current.resetFields();
     formRef.current.setFieldsValue({ bookId: data.id, index: pagination.total + 1 });
-    setColumnTrogle(true);
+    setColumnTrogle(!columnTrogle);
   }
   useEffect(() => {
     query(match.params.id);
