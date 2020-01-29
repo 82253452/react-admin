@@ -199,7 +199,7 @@ export default {
     },
   },
   manifest: {
-    basePath: '/admin',
+    basePath: '/',
   },
   chainWebpack: webpackPlugin,
   proxy: {
